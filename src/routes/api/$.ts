@@ -4,7 +4,7 @@ import { openapi } from "@elysiajs/openapi"
 import { createFileRoute } from "@tanstack/react-router"
 import { createIsomorphicFn } from "@tanstack/react-start"
 import { todoDto } from "~/features/todos/todo-dto"
-import { db } from "~/db/model"
+import { todoInsertSchema } from "~/features/todos/schemas/todo-schema"
 
 const app = new Elysia({ prefix: "/api" })
   .use(
@@ -40,9 +40,7 @@ const app = new Elysia({ prefix: "/api" })
           return await todoDto.create(body.text)
         },
         {
-          body: t.Object({
-            text: db.insert.todos.text,
-          }),
+          body: t.Pick(todoInsertSchema, ["text"]),
           detail: {
             summary: "Create a new todo",
             tags: ["Todos"],
@@ -58,13 +56,8 @@ const app = new Elysia({ prefix: "/api" })
           })
         },
         {
-          params: t.Object({
-            id: t.String(),
-          }),
-          body: t.Object({
-            text: t.Optional(db.insert.todos.text),
-            completed: t.Optional(db.insert.todos.completed),
-          }),
+          params: t.Pick(todoInsertSchema, ["id"]),
+          body: t.Partial(t.Omit(todoInsertSchema, ["id", "created_at", "updated_at"])),
           detail: {
             summary: "Update a todo",
             tags: ["Todos"],

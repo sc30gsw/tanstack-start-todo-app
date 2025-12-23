@@ -1,7 +1,6 @@
 import { db } from "~/db"
 import { todos } from "~/db/schema"
 import { eq } from "drizzle-orm"
-import type { Todo } from "~/features/todos/schemas/todo-schema"
 
 export const todoDto = {
   getAll: async () => {
@@ -14,7 +13,7 @@ export const todoDto = {
     return result
   },
 
-  create: async (text: Todo["text"]) => {
+  create: async (text: (typeof todos.$inferInsert)["text"]) => {
     if (!db) {
       throw new Error("Database not initialized")
     }
@@ -29,7 +28,10 @@ export const todoDto = {
     return result[0]
   },
 
-  update: async (id: Todo["id"], data: Partial<Pick<Todo, "text" | "completed">>) => {
+  update: async (
+    id: (typeof todos.$inferSelect)["id"],
+    data: Partial<Pick<typeof todos.$inferInsert, "text" | "completed">>,
+  ) => {
     if (!db) {
       throw new Error("Database not initialized")
     }
@@ -44,17 +46,18 @@ export const todoDto = {
       .returning()
 
     const todo = result[0]
+
     if (!todo) {
-      return undefined
+      return null
     }
 
     return {
       ...todo,
-      completed: todo.completed ?? undefined,
+      completed: todo.completed ?? false,
     }
   },
 
-  delete: async (id: Todo["id"]) => {
+  delete: async (id: (typeof todos.$inferSelect)["id"]) => {
     if (!db) {
       throw new Error("Database not initialized")
     }

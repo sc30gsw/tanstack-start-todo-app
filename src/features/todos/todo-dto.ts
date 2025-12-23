@@ -1,25 +1,25 @@
-import { db as drizzleDb } from "~/db"
+import { db } from "~/db"
 import { todos } from "~/db/schema"
 import { eq } from "drizzle-orm"
 import type { Todo } from "~/features/todos/schemas/todo-schema"
 
 export const todoDto = {
   getAll: async () => {
-    if (!drizzleDb) {
+    if (!db) {
       throw new Error("Database not initialized")
     }
 
-    const result = await drizzleDb.query.todos.findMany()
+    const result = await db.query.todos.findMany()
 
     return result
   },
 
   create: async (text: Todo["text"]) => {
-    if (!drizzleDb) {
+    if (!db) {
       throw new Error("Database not initialized")
     }
 
-    const result = await drizzleDb
+    const result = await db
       .insert(todos)
       .values({
         text,
@@ -30,11 +30,11 @@ export const todoDto = {
   },
 
   update: async (id: Todo["id"], data: Partial<Pick<Todo, "text" | "completed">>) => {
-    if (!drizzleDb) {
+    if (!db) {
       throw new Error("Database not initialized")
     }
 
-    const result = await drizzleDb
+    const result = await db
       .update(todos)
       .set({
         text: data.text,
@@ -55,11 +55,11 @@ export const todoDto = {
   },
 
   delete: async (id: Todo["id"]) => {
-    if (!drizzleDb) {
+    if (!db) {
       throw new Error("Database not initialized")
     }
 
-    await drizzleDb.delete(todos).where(eq(todos.id, id))
+    await db.delete(todos).where(eq(todos.id, id))
 
     return { success: true }
   },

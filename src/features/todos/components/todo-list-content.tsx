@@ -16,7 +16,6 @@ export function TodoListContent() {
     sortBy,
     sortOrder,
   })
-  console.log("🚀 ~ TodoListContent ~ data:", data)
 
   if (!data || data.length === 0) {
     return (

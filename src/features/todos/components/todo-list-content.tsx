@@ -1,5 +1,5 @@
 import { getRouteApi } from "@tanstack/react-router"
-import { useLiveQuery } from "@tanstack/react-db"
+import { useLiveSuspenseQuery } from "@tanstack/react-db"
 import { todoCollection } from "~/features/todos/collections"
 import { TodoItem } from "~/features/todos/components/todo-item"
 import { eq, like } from "@tanstack/db"
@@ -12,7 +12,7 @@ export function TodoListContent() {
   const sortBy = search.sortBy ?? "created_at"
   const sortOrder = search.sortOrder ?? "desc"
 
-  const { data } = useLiveQuery(
+  const { data } = useLiveSuspenseQuery(
     (q) => {
       let query = q.from({ todo: todoCollection })
 

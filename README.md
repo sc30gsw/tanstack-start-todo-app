@@ -21,24 +21,24 @@ This project is a Todo application that showcases modern full-stack development 
 
 This project is built on [TanStack Start Starter](https://github.com/lightsound/tanstack-start-start) and leverages cutting-edge tools:
 
-| Category   | Technology                                                                             | Version   |
-| ---------- | -------------------------------------------------------------------------------------- | --------- |
-| Framework  | [TanStack Start](https://tanstack.com/start)                                           | Latest    |
-| Router     | [TanStack Router](https://tanstack.com/router)                                         | Latest    |
-| Data Fetching | [TanStack Query](https://tanstack.com/query)                                        | Latest    |
-| Database   | [TanStack DB](https://tanstack.com/db/latest)                                          | Latest    |
-| Forms      | [TanStack React Form](https://tanstack.com/form)                                       | Latest    |
-| API Server | [Elysia](https://elysiajs.com/)                                                        | Latest    |
-| Database ORM | [Drizzle ORM](https://orm.drizzle.team/)                                              | Latest    |
-| Database   | [Turso (LibSQL)](https://turso.tech/)                                                  | Latest    |
-| Validation | [Valibot](https://valibot.dev/)                                                        | Latest    |
-| Styling    | [Tailwind CSS](https://tailwindcss.com/)                                               | 4         |
-| Language   | [TypeScript Native](https://devblogs.microsoft.com/typescript/typescript-native-port/) | 7 Preview |
-| Build Tool | [Vite](https://vite.dev/)                                                              | 8 Beta    |
-| Linter     | [oxlint](https://oxc.rs/docs/guide/usage/linter)                                       | Latest    |
-| Formatter  | [oxfmt](https://oxc.rs/docs/guide/usage/formatter)                                     | Latest    |
-| Git Hooks  | [Lefthook](https://github.com/evilmartians/lefthook)                                   | Latest    |
-| Runtime    | [Bun](https://bun.sh/)                                                                 | Latest    |
+| Category      | Technology                                                                             | Version   |
+| ------------- | -------------------------------------------------------------------------------------- | --------- |
+| Framework     | [TanStack Start](https://tanstack.com/start)                                           | Latest    |
+| Router        | [TanStack Router](https://tanstack.com/router)                                         | Latest    |
+| Data Fetching | [TanStack Query](https://tanstack.com/query)                                           | Latest    |
+| Database      | [TanStack DB](https://tanstack.com/db/latest)                                          | Latest    |
+| Forms         | [TanStack React Form](https://tanstack.com/form)                                       | Latest    |
+| API Server    | [Elysia](https://elysiajs.com/)                                                        | Latest    |
+| Database ORM  | [Drizzle ORM](https://orm.drizzle.team/)                                               | Latest    |
+| Database      | [Turso (LibSQL)](https://turso.tech/)                                                  | Latest    |
+| Validation    | [Valibot](https://valibot.dev/)                                                        | Latest    |
+| Styling       | [Tailwind CSS](https://tailwindcss.com/)                                               | 4         |
+| Language      | [TypeScript Native](https://devblogs.microsoft.com/typescript/typescript-native-port/) | 7 Preview |
+| Build Tool    | [Vite](https://vite.dev/)                                                              | 8 Beta    |
+| Linter        | [oxlint](https://oxc.rs/docs/guide/usage/linter)                                       | Latest    |
+| Formatter     | [oxfmt](https://oxc.rs/docs/guide/usage/formatter)                                     | Latest    |
+| Git Hooks     | [Lefthook](https://github.com/evilmartians/lefthook)                                   | Latest    |
+| Runtime       | [Bun](https://bun.sh/)                                                                 | Latest    |
 
 ## Getting Started
 
@@ -72,16 +72,16 @@ bun run dev
 
 ## Scripts
 
-| Command            | Description                          |
-| ------------------ | ------------------------------------ |
-| `bun run dev`      | Start development server             |
-| `bun run build`    | Build for production                 |
-| `bun run start`    | Preview production build             |
-| `bun run check`    | Run linter and formatter check       |
-| `bun run fix`      | Auto-fix lint issues and format code |
-| `bun run db:generate` | Generate database migrations      |
-| `bun run db:migrate` | Run database migrations            |
-| `bun run db:studio` | Open Drizzle Studio for database management |
+| Command               | Description                                 |
+| --------------------- | ------------------------------------------- |
+| `bun run dev`         | Start development server                    |
+| `bun run build`       | Build for production                        |
+| `bun run start`       | Preview production build                    |
+| `bun run check`       | Run linter and formatter check              |
+| `bun run fix`         | Auto-fix lint issues and format code        |
+| `bun run db:generate` | Generate database migrations                |
+| `bun run db:migrate`  | Run database migrations                     |
+| `bun run db:studio`   | Open Drizzle Studio for database management |
 
 ## VS Code Configuration
 

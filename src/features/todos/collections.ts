@@ -64,6 +64,10 @@ export const todoCollection = createCollection(
     onDelete: async ({ transaction }) => {
       const original = transaction.mutations[0].original
 
+      if (!original.id) {
+        throw new Error("Todo item must have an id")
+      }
+
       await api.todos({ id: original.id }).delete()
     },
   }),

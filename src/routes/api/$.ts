@@ -40,4 +40,4 @@ export const Route = createFileRoute("/api/$")({
 
 export const getTreaty = createIsomorphicFn()
   .server(() => treaty(app).api)
-  .client(() => treaty<typeof app>("http://localhost:5173").api)
+  .client(() => treaty<typeof app>(import.meta.env.APP_URL).api)

@@ -3,7 +3,7 @@ import { treaty } from "@elysiajs/eden"
 import { openapi } from "@elysiajs/openapi"
 import { createFileRoute } from "@tanstack/react-router"
 import { createIsomorphicFn } from "@tanstack/react-start"
-import { getTodos, createTodo, updateTodo, deleteTodo } from "~/features/todos/queries"
+import { todoDto } from "~/features/todos/todo-dto"
 import { db } from "~/db/model"
 
 const app = new Elysia({ prefix: "/api" })
@@ -25,7 +25,7 @@ const app = new Elysia({ prefix: "/api" })
       .get(
         "/",
         async () => {
-          return await getTodos()
+          return await todoDto.getAll()
         },
         {
           detail: {
@@ -37,7 +37,7 @@ const app = new Elysia({ prefix: "/api" })
       .post(
         "/",
         async ({ body }) => {
-          return await createTodo(body.text)
+          return await todoDto.create(body.text)
         },
         {
           body: t.Object({
@@ -52,7 +52,7 @@ const app = new Elysia({ prefix: "/api" })
       .patch(
         "/:id",
         async ({ params, body }) => {
-          return await updateTodo(params.id, {
+          return await todoDto.update(params.id, {
             text: body.text,
             completed: body.completed,
           })
@@ -74,7 +74,7 @@ const app = new Elysia({ prefix: "/api" })
       .delete(
         "/:id",
         async ({ params }) => {
-          return await deleteTodo(params.id)
+          return await todoDto.delete(params.id)
         },
         {
           params: t.Object({

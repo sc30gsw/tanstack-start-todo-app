@@ -3,10 +3,50 @@ import { treaty } from "@elysiajs/eden"
 import { openapi } from "@elysiajs/openapi"
 import { createFileRoute } from "@tanstack/react-router"
 import { createIsomorphicFn } from "@tanstack/react-start"
-import { todoDto } from "~/features/todos/todo-dto"
+import { todoDto } from "~/features/todos/server/todo-dto"
 import { todoInsertSchema } from "~/features/todos/schemas/todo-schema"
+import { DatabaseError, TodoNotFoundError } from "~/features/todos/server/errors"
 
 const app = new Elysia({ prefix: "/api" })
+  .error({
+    DatabaseError,
+    TodoNotFoundError,
+  })
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case "DatabaseError":
+        set.status = error.status
+
+        return {
+          error: error.message,
+          code: "DATABASE_ERROR",
+        }
+
+      case "TodoNotFoundError":
+        set.status = error.status
+
+        return {
+          error: error.message,
+          code: "TODO_NOT_FOUND",
+        }
+
+      case "VALIDATION":
+        set.status = 400
+
+        return {
+          error: error.message,
+          code: "VALIDATION_ERROR",
+        }
+
+      default:
+        set.status = 500
+
+        return {
+          error: "Internal server error",
+          code: "INTERNAL_ERROR",
+        }
+    }
+  })
   .use(
     openapi({
       path: "/swagger",

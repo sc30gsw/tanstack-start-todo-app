@@ -4,7 +4,7 @@ import { openapi } from "@elysiajs/openapi"
 import { createFileRoute } from "@tanstack/react-router"
 import { createIsomorphicFn } from "@tanstack/react-start"
 import { todoDto } from "~/features/todos/server/todo-dto"
-import { todoInsertSchema } from "~/features/todos/schemas/todo-schema"
+import { todoInsertSchema, todoSelectSchema } from "~/features/todos/schemas/todo-schema"
 import { DatabaseError, TodoNotFoundError } from "~/features/todos/server/errors"
 
 const app = new Elysia({ prefix: "/api" })
@@ -64,10 +64,13 @@ const app = new Elysia({ prefix: "/api" })
     app
       .get(
         "/",
-        async () => {
+        async ({ set }) => {
+          set.status = 200
+
           return await todoDto.getAll()
         },
         {
+          response: t.Array(todoSelectSchema),
           detail: {
             summary: "Get all todos",
             tags: ["Todos"],
@@ -76,11 +79,14 @@ const app = new Elysia({ prefix: "/api" })
       )
       .post(
         "/",
-        async ({ body }) => {
+        async ({ body, set }) => {
+          set.status = 201
+
           return await todoDto.create(body.text)
         },
         {
           body: t.Pick(todoInsertSchema, ["text"]),
+          response: todoSelectSchema,
           detail: {
             summary: "Create a new todo",
             tags: ["Todos"],
@@ -89,7 +95,9 @@ const app = new Elysia({ prefix: "/api" })
       )
       .patch(
         "/:id",
-        async ({ params, body }) => {
+        async ({ params, body, set }) => {
+          set.status = 200
+
           return await todoDto.update(params.id, {
             text: body.text,
             completed: body.completed,
@@ -98,6 +106,7 @@ const app = new Elysia({ prefix: "/api" })
         {
           params: t.Pick(todoInsertSchema, ["id"]),
           body: t.Partial(t.Omit(todoInsertSchema, ["id", "created_at", "updated_at"])),
+          response: todoSelectSchema,
           detail: {
             summary: "Update a todo",
             tags: ["Todos"],
@@ -106,12 +115,17 @@ const app = new Elysia({ prefix: "/api" })
       )
       .delete(
         "/:id",
-        async ({ params }) => {
+        async ({ params, set }) => {
+          set.status = 200
+
           return await todoDto.delete(params.id)
         },
         {
           params: t.Object({
             id: t.String(),
+          }),
+          response: t.Object({
+            success: t.Boolean(),
           }),
           detail: {
             summary: "Delete a todo",

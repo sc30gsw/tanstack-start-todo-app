@@ -15,12 +15,12 @@ export const todoCollection = createCollection(
     queryFn: async () => {
       const response = await api.todos.get()
 
-      if (!response.data) {
-        return []
+      if (response.error) {
+        throw new Error(response.error.value.message || "Failed to fetch todos")
       }
 
-      if ("error" in response.data) {
-        throw new Error(response.data.error)
+      if (!response.data) {
+        return []
       }
 
       const mappedData = response.data.map((todo) => {

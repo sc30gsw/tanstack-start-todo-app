@@ -6,11 +6,13 @@ pre-commit:
   commands:
     lint:
       glob: "*.{js,jsx,ts,tsx}"
-      exclude: "**/routeTree.gen.ts"
+      exclude:
+        - "**/routeTree.gen.ts"
       run: bun run lint -- {staged_files}
     format:
       glob: "*.{js,jsx,ts,tsx,json,css}"
-      exclude: "**/routeTree.gen.ts"
+      exclude:
+        - "**/routeTree.gen.ts"
       run: bun run fmt -- {staged_files}
 
 pre-push:

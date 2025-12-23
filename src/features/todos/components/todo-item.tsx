@@ -1,4 +1,4 @@
-import { memo, useState } from "react"
+import { memo, useCallback, useState } from "react"
 import { useForm } from "@tanstack/react-form"
 import type { Todo } from "~/features/todos/schemas/todo-schema"
 import { todoCollection } from "~/features/todos/collections"
@@ -140,12 +140,20 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
   )
 })
 
-export function TodoItem({ todo }: Record<"todo", Todo>) {
+export const TodoItem = memo(function TodoItem({ todo }: Record<"todo", Todo>) {
   const [isEditing, setIsEditing] = useState(false)
 
+  const handleEdit = useCallback(() => {
+    setIsEditing(true)
+  }, [])
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false)
+  }, [])
+
   return isEditing ? (
-    <TodoItemEdit todo={todo} onCancel={() => setIsEditing(false)} />
+    <TodoItemEdit todo={todo} onCancel={handleCancel} />
   ) : (
-    <TodoItemView todo={todo} onEdit={() => setIsEditing(true)} />
+    <TodoItemView todo={todo} onEdit={handleEdit} />
   )
-}
+})

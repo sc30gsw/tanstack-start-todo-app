@@ -1,4 +1,5 @@
 import { getRouteApi } from "@tanstack/react-router"
+import type { SearchParams } from "~/features/todos/schemas/search-schema"
 
 export function TodoSearch() {
   const routeApi = getRouteApi("/")
@@ -14,7 +15,10 @@ export function TodoSearch() {
     })
   }
 
-  const handleSortChange = (sortBy: "created_at" | "text", sortOrder: "asc" | "desc") => {
+  const handleSortChange = (
+    sortBy: NonNullable<SearchParams["sortBy"]>,
+    sortOrder: NonNullable<NonNullable<SearchParams["sortOrder"]>>,
+  ) => {
     navigate({
       search: (prev) => ({
         ...prev,
@@ -77,10 +81,11 @@ export function TodoSearch() {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-gray-700">Sort:</span>
           <select
-            value={search.sortBy ?? "created_at"}
+            value={search.sortBy ?? "createdAt"}
             onChange={(e) => {
-              const sortBy = e.target.value as "created_at" | "text"
+              const sortBy = e.target.value as NonNullable<SearchParams["sortBy"]>
               const currentOrder = search.sortOrder ?? "desc"
+
               handleSortChange(sortBy, currentOrder)
             }}
             className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -91,8 +96,11 @@ export function TodoSearch() {
           <select
             value={search.sortOrder ?? "desc"}
             onChange={(e) => {
-              const sortOrder = e.target.value as "asc" | "desc"
-              const currentBy = search.sortBy ?? "created_at"
+              const sortOrder = e.target.value as NonNullable<
+                NonNullable<SearchParams["sortOrder"]>
+              >
+              const currentBy = search.sortBy ?? "createdAt"
+
               handleSortChange(currentBy, sortOrder)
             }}
             className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"

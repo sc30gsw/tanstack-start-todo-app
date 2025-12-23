@@ -7,7 +7,7 @@ export const searchSchema = object({
     transform((val) => val ?? ""),
   ),
   completed: optional(boolean()),
-  sortBy: optional(picklist(["created_at", "text"])),
+  sortBy: optional(picklist(["createdAt", "text"])),
   sortOrder: optional(picklist(["asc", "desc"])),
 })
 

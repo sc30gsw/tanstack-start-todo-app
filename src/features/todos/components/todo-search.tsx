@@ -90,7 +90,7 @@ export function TodoSearch() {
             }}
             className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="created_at">Date</option>
+            <option value="createdAt">Date</option>
             <option value="text">Text</option>
           </select>
           <select

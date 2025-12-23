@@ -4,7 +4,7 @@ import { eq, like } from "@tanstack/db"
 import type { SearchParams } from "~/features/todos/schemas/search-schema"
 
 export function useTodosQuery({
-  q,
+  q: searchQuery,
   completed,
   sortBy = "createdAt",
   sortOrder = "desc",
@@ -17,9 +17,9 @@ export function useTodosQuery({
         query = query.where(({ todo }) => eq(todo.completed, completed))
       }
 
-      if (q) {
+      if (searchQuery) {
         query = query.where(({ todo }) => {
-          return like(todo.text, `%${q}%`)
+          return like(todo.text, `%${searchQuery}%`)
         })
       }
 
@@ -35,6 +35,6 @@ export function useTodosQuery({
 
       return query
     },
-    [completed, q, sortBy, sortOrder],
+    [completed, searchQuery, sortBy, sortOrder],
   )
 }

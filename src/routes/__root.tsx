@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import appCss from "../styles.css?url";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
+import appCss from "../styles.css?url"
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -16,7 +16,7 @@ export const Route = createRootRoute({
   }),
   notFoundComponent: NotFoundComponent,
   pendingComponent: PendingComponent,
-});
+})
 
 function RootComponent() {
   return (
@@ -30,7 +30,7 @@ function RootComponent() {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 function NotFoundComponent() {
@@ -39,7 +39,7 @@ function NotFoundComponent() {
       <h1 className="text-2xl font-bold">404</h1>
       <p>ページが見つかりませんでした。</p>
     </div>
-  );
+  )
 }
 
 function ErrorComponent({ error }: { error: Error }) {
@@ -48,7 +48,7 @@ function ErrorComponent({ error }: { error: Error }) {
       <h1 className="text-2xl font-bold text-red-600">エラー</h1>
       <p>{error.message}</p>
     </div>
-  );
+  )
 }
 
 function PendingComponent() {
@@ -56,5 +56,5 @@ function PendingComponent() {
     <div className="p-4">
       <p>読み込み中...</p>
     </div>
-  );
+  )
 }

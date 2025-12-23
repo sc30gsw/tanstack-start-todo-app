@@ -3,6 +3,7 @@ import { useForm } from "@tanstack/react-form"
 import type { Todo } from "~/features/todos/schemas/todo-schema"
 import { todoCollection } from "~/features/todos/collections"
 import { todoFormSchema } from "~/features/todos/schemas/todo-form-schema"
+import { cn } from "~/utils/cn"
 
 type TodoItemViewProps = {
   todo: Todo
@@ -22,7 +23,9 @@ const TodoItemView = memo(function TodoItemView({ todo, onEdit }: TodoItemViewPr
         }
         className="h-5 w-5 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
       />
-      <span className={`flex-1 ${todo.completed ? "text-gray-500 line-through" : "text-gray-900"}`}>
+      <span
+        className={cn("flex-1", todo.completed ? "text-gray-500 line-through" : "text-gray-900")}
+      >
         {todo.text}
       </span>
       <button
@@ -91,11 +94,12 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className={`flex-1 rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 ${
+                  className={cn(
+                    "flex-1 rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                     field.state.meta.errors.length > 0
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                      : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  }`}
+                      : "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
+                  )}
                 />
                 <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                   {([canSubmit, isSubmitting]) => (

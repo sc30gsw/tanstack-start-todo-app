@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form"
 import { todoCollection } from "~/features/todos/collections"
 import { todoFormSchema } from "~/features/todos/schemas/todo-form-schema"
+import { cn } from "~/utils/cn"
 
 export function TodoForm() {
   const form = useForm({
@@ -42,11 +43,12 @@ export function TodoForm() {
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Add a new todo..."
-                className={`flex-1 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 ${
+                className={cn(
+                  "flex-1 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2",
                   field.state.meta.errors.length > 0
                     ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                }`}
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
+                )}
               />
               <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                 {([canSubmit, isSubmitting]) => (

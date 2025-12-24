@@ -31,26 +31,26 @@ The application includes features like creating, updating, deleting, and searchi
 
 This project is built on [TanStack Start Starter](https://github.com/lightsound/tanstack-start-start) and leverages cutting-edge tools:
 
-| Category      | Technology                                                                             | Version   |
-| ------------- | -------------------------------------------------------------------------------------- | --------- |
-| Framework     | [TanStack Start](https://tanstack.com/start)                                           | Latest    |
-| Router        | [TanStack Router](https://tanstack.com/router)                                         | Latest    |
-| Data Fetching | [TanStack Query](https://tanstack.com/query)                                           | Latest    |
-| Client DB     | [TanStack DB](https://tanstack.com/db/latest)                                          | Latest    |
-| Forms         | [TanStack React Form](https://tanstack.com/form)                                       | Latest    |
-| API Server    | [Elysia](https://elysiajs.com/)                                                        | Latest    |
-| Database ORM  | [Drizzle ORM](https://orm.drizzle.team/)                                               | Latest    |
-| Database      | [Turso (LibSQL)](https://turso.tech/)                                                  | Latest    |
-| Validation    | [Valibot](https://valibot.dev/)                                                        | Latest    |
-| API Validation| [drizzle-typebox](https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-typebox) | Latest    |
-| API Validation| [TypeBox](https://github.com/sinclairzx81/typebox) (via Elysia)                      | Latest    |
-| Styling       | [Tailwind CSS](https://tailwindcss.com/)                                               | 4         |
-| Language      | [TypeScript Native](https://devblogs.microsoft.com/typescript/typescript-native-port/) | 7 Preview |
-| Build Tool    | [Vite](https://vite.dev/)                                                              | 8 Beta    |
-| Linter        | [oxlint](https://oxc.rs/docs/guide/usage/linter)                                       | Latest    |
-| Formatter     | [oxfmt](https://oxc.rs/docs/guide/usage/formatter)                                     | Latest    |
-| Git Hooks     | [Lefthook](https://github.com/evilmartians/lefthook)                                   | Latest    |
-| Runtime       | [Bun](https://bun.sh/)                                                                 | Latest    |
+| Category       | Technology                                                                               | Version   |
+| -------------- | ---------------------------------------------------------------------------------------- | --------- |
+| Framework      | [TanStack Start](https://tanstack.com/start)                                             | Latest    |
+| Router         | [TanStack Router](https://tanstack.com/router)                                           | Latest    |
+| Data Fetching  | [TanStack Query](https://tanstack.com/query)                                             | Latest    |
+| Client DB      | [TanStack DB](https://tanstack.com/db/latest)                                            | Latest    |
+| Forms          | [TanStack React Form](https://tanstack.com/form)                                         | Latest    |
+| API Server     | [Elysia](https://elysiajs.com/)                                                          | Latest    |
+| Database ORM   | [Drizzle ORM](https://orm.drizzle.team/)                                                 | Latest    |
+| Database       | [Turso (LibSQL)](https://turso.tech/)                                                    | Latest    |
+| Validation     | [Valibot](https://valibot.dev/)                                                          | Latest    |
+| API Validation | [drizzle-typebox](https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-typebox) | Latest    |
+| API Validation | [TypeBox](https://github.com/sinclairzx81/typebox) (via Elysia)                          | Latest    |
+| Styling        | [Tailwind CSS](https://tailwindcss.com/)                                                 | 4         |
+| Language       | [TypeScript Native](https://devblogs.microsoft.com/typescript/typescript-native-port/)   | 7 Preview |
+| Build Tool     | [Vite](https://vite.dev/)                                                                | 8 Beta    |
+| Linter         | [oxlint](https://oxc.rs/docs/guide/usage/linter)                                         | Latest    |
+| Formatter      | [oxfmt](https://oxc.rs/docs/guide/usage/formatter)                                       | Latest    |
+| Git Hooks      | [Lefthook](https://github.com/evilmartians/lefthook)                                     | Latest    |
+| Runtime        | [Bun](https://bun.sh/)                                                                   | Latest    |
 
 ## Getting Started
 
@@ -148,12 +148,14 @@ http://localhost:3000/api/swagger
 ```
 
 This provides interactive documentation for all available API endpoints, including:
+
 - `GET /api/todos` - Get all todos
 - `POST /api/todos` - Create a new todo
 - `PATCH /api/todos/:id` - Update a todo
 - `DELETE /api/todos/:id` - Delete a todo
 
 The API follows Elysia's best practices with:
+
 - Type-safe request/response validation using TypeBox
 - Custom error handling with proper status codes
 - OpenAPI-compliant documentation

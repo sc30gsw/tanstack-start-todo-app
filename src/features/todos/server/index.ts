@@ -16,7 +16,7 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
         return {
           error: error.message,
           code: "DATABASE_ERROR",
-        } satisfies TodoModel.databaseError
+        }
 
       case "TodoNotFoundError":
         set.status = error.status
@@ -24,7 +24,7 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
         return {
           error: error.message,
           code: "TODO_NOT_FOUND",
-        } satisfies TodoModel.todoNotFoundError
+        }
 
       default:
         throw error

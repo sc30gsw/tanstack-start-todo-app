@@ -4,7 +4,15 @@ A full-stack Todo application built with [TanStack Start Starter](https://github
 
 ## About This Project
 
-This project is a Todo application that showcases modern full-stack development with TanStack Start. It includes features like creating, updating, deleting, and searching todos with real-time data synchronization.
+This project is a Todo application that showcases modern full-stack development with TanStack Start, TanStack DB, and Elysia. It demonstrates:
+
+- **Local-first architecture** with TanStack DB for client-side reactive data management
+- **Optimistic updates** with automatic error handling and rollback
+- **Type-safe API** using Elysia with TypeBox validation and Eden Treaty for RPC calls
+- **MVC pattern** following Elysia's best practices (Controller/Service/Model separation)
+- **Real-time reactivity** with Live Queries that update UI instantly on data changes
+
+The application includes features like creating, updating, deleting, and searching todos with real-time data synchronization powered by TanStack DB's reactive query system.
 
 ### Features
 
@@ -12,10 +20,12 @@ This project is a Todo application that showcases modern full-stack development 
 - 🔍 Search todos by text
 - 🎯 Filter todos by completion status (All/Active/Completed)
 - 📊 Sort todos by date or text (ascending/descending)
-- 🔄 Real-time data synchronization with TanStack Query
-- 📝 Form validation with TanStack React Form
+- ⚡ Real-time reactive updates with TanStack DB Live Queries
+- 🚀 Optimistic updates with automatic rollback on errors
+- 📝 Form validation with TanStack React Form and Valibot
 - 🗄️ Database integration with Drizzle ORM and Turso (LibSQL)
-- 📡 RESTful API with Elysia and OpenAPI documentation
+- 📡 Type-safe RESTful API with Elysia and OpenAPI documentation
+- 🏗️ MVC architecture following Elysia best practices
 
 ## Tech Stack
 
@@ -26,12 +36,14 @@ This project is built on [TanStack Start Starter](https://github.com/lightsound/
 | Framework     | [TanStack Start](https://tanstack.com/start)                                           | Latest    |
 | Router        | [TanStack Router](https://tanstack.com/router)                                         | Latest    |
 | Data Fetching | [TanStack Query](https://tanstack.com/query)                                           | Latest    |
-| Database      | [TanStack DB](https://tanstack.com/db/latest)                                          | Latest    |
+| Client DB     | [TanStack DB](https://tanstack.com/db/latest)                                          | Latest    |
 | Forms         | [TanStack React Form](https://tanstack.com/form)                                       | Latest    |
 | API Server    | [Elysia](https://elysiajs.com/)                                                        | Latest    |
 | Database ORM  | [Drizzle ORM](https://orm.drizzle.team/)                                               | Latest    |
 | Database      | [Turso (LibSQL)](https://turso.tech/)                                                  | Latest    |
 | Validation    | [Valibot](https://valibot.dev/)                                                        | Latest    |
+| API Validation| [drizzle-typebox](https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-typebox) | Latest    |
+| API Validation| [TypeBox](https://github.com/sinclairzx81/typebox) (via Elysia)                      | Latest    |
 | Styling       | [Tailwind CSS](https://tailwindcss.com/)                                               | 4         |
 | Language      | [TypeScript Native](https://devblogs.microsoft.com/typescript/typescript-native-port/) | 7 Preview |
 | Build Tool    | [Vite](https://vite.dev/)                                                              | 8 Beta    |
@@ -63,7 +75,8 @@ cp .env.example .env
 # TURSO_DATABASE_URL=your-database-url
 # TURSO_AUTH_TOKEN=your-auth-token
 
-# Run database migrations
+# Generate and run database migrations
+bun run db:generate
 bun run db:migrate
 
 # Start development server
@@ -134,7 +147,17 @@ The application includes an OpenAPI/Swagger documentation endpoint. When running
 http://localhost:3000/api/swagger
 ```
 
-This provides interactive documentation for all available API endpoints.
+This provides interactive documentation for all available API endpoints, including:
+- `GET /api/todos` - Get all todos
+- `POST /api/todos` - Create a new todo
+- `PATCH /api/todos/:id` - Update a todo
+- `DELETE /api/todos/:id` - Delete a todo
+
+The API follows Elysia's best practices with:
+- Type-safe request/response validation using TypeBox
+- Custom error handling with proper status codes
+- OpenAPI-compliant documentation
+- Type-safe client via Eden Treaty
 
 ## Developer Tools
 
@@ -142,25 +165,64 @@ In development mode, this application includes [TanStack Router DevTools](https:
 
 ## Project Structure
 
+This project follows a feature-based architecture with clear separation of concerns:
+
 ```
 src/
 ├── components/          # Shared components
+│   └── client-only.tsx # Client-side only component wrapper
 ├── db/                  # Database configuration and schema
-│   ├── index.ts        # Database connection
-│   ├── model.ts        # Database model utilities
-│   └── schema.ts       # Drizzle ORM schema definitions
+│   ├── index.ts        # Database connection (Drizzle + Turso)
+│   ├── schema.ts       # Drizzle ORM schema definitions
+│   └── utils.ts        # Database utility functions
 ├── features/           # Feature-based organization
 │   └── todos/          # Todo feature module
-│       ├── collections.ts      # TanStack DB collections
-│       ├── components/         # Todo-specific components
+│       ├── collections.ts      # TanStack DB collection definition
+│       ├── components/         # Todo-specific React components
+│       │   ├── todo-form.tsx           # Todo creation form
+│       │   ├── todo-item.tsx            # Individual todo item
+│       │   ├── todo-list-content.tsx    # Todo list content
+│       │   ├── todo-list-with-search.tsx # Todo list with search
+│       │   └── todo-search.tsx         # Search and filter UI
 │       ├── hooks/              # Custom React hooks
+│       │   └── use-todos-query.ts      # Live query hook
 │       ├── schemas/            # Validation schemas (Valibot)
-│       └── todo-dto.ts         # Data transfer objects
+│       │   ├── search-schema.ts        # Search params schema
+│       │   ├── todo-form-schema.ts     # Form validation schema
+│       │   └── todo-schema.ts         # Todo data schema
+│       └── server/             # Elysia API (MVC pattern)
+│           ├── index.ts       # Controller (Elysia plugin)
+│           ├── service.ts     # Business logic (abstract class)
+│           ├── model.ts       # Validation models (TypeBox)
+│           └── errors.ts      # Custom error classes
 ├── routes/             # TanStack Router file-based routes
 │   ├── api/            # API route handlers (Elysia)
+│   │   └── $.ts        # Main API route with plugin integration
 │   └── index.tsx       # Home page route
-└── router.tsx          # Router configuration
+├── utils/              # Utility functions
+│   └── cn.ts           # Class name utility (clsx + tailwind-merge)
+├── router.tsx          # Router configuration
+└── styles.css          # Global styles
 ```
+
+### Architecture Highlights
+
+- **Elysia Best Practices**: The API follows Elysia's recommended MVC pattern:
+  - **Controller** (`server/index.ts`): Elysia plugin handling HTTP routing and validation
+  - **Service** (`server/service.ts`): Business logic as abstract class with static methods
+  - **Model** (`server/model.ts`): TypeBox validation schemas grouped in a namespace
+  - **Errors** (`server/errors.ts`): Custom error classes with status codes
+
+- **TanStack DB**: Client-side reactive database with:
+  - **Collection** (`collections.ts`): Defines data fetching and mutations
+  - **Live Queries**: Real-time reactive queries using `useLiveSuspenseQuery`
+  - **Optimistic Updates**: Automatic optimistic updates via transaction mutators
+
+- **Type Safety**: End-to-end type safety with:
+  - Drizzle ORM for database types
+  - [TypeBox](https://github.com/sinclairzx81/typebox) for Elysia validation (via `drizzle-typebox` and Elysia's `t`)
+  - Valibot for client-side validation
+  - Eden Treaty for type-safe API calls
 
 ## License
 

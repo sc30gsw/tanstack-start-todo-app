@@ -15,8 +15,8 @@ export const todoCollection = createCollection(
     queryFn: async () => {
       const response = await api.todos.get()
 
-      if (response.error) {
-        throw new Error(response.error.value.message || "Failed to fetch todos")
+      if (response.status !== 200) {
+        throw new Error(response.error?.value?.message || "Failed to fetch todos")
       }
 
       if (!response.data) {

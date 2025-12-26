@@ -19,6 +19,9 @@ export const Route = createRootRoute({
   search: {
     middlewares: [stripSearchParams(defaultSearchParams)],
   },
+  beforeLoad: ({ location }) => {
+    return { href: location.href }
+  },
   loaderDeps: ({ search: { q, completed, sortBy, sortOrder } }) => ({
     q,
     completed,
@@ -46,7 +49,6 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  // #endregion
   return (
     <html lang="ja">
       <head>

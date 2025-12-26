@@ -6,16 +6,8 @@ export function TodoListContent() {
   const routeApi = getRouteApi("/")
   const search = routeApi.useSearch()
   const q = search.q ?? ""
-  const completed = search.completed
-  const sortBy = search.sortBy
-  const sortOrder = search.sortOrder
 
-  const { data } = useTodosQuery({
-    q,
-    completed,
-    sortBy,
-    sortOrder,
-  })
+  const { data } = useTodosQuery()
 
   if (!data || data.length === 0) {
     return (

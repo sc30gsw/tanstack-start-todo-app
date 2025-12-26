@@ -1,15 +1,17 @@
 import { useLiveSuspenseQuery } from "@tanstack/react-db"
 import { todoCollection } from "~/features/todos/collections"
 import { eq, like } from "@tanstack/db"
-import type { SearchParams } from "~/features/todos/schemas/search-schema"
-import { defaultSearchParams } from "~/features/todos/schemas/search-schema"
 
-export function useTodosQuery({
-  q: searchQuery,
-  completed,
-  sortBy = "createdAt",
-  sortOrder = "desc",
-}: Partial<SearchParams> = defaultSearchParams) {
+import { getRouteApi } from "@tanstack/react-router"
+
+export function useTodosQuery() {
+  const routeApi = getRouteApi("/")
+  const search = routeApi.useSearch()
+  const searchQuery = search.q ?? ""
+  const completed = search.completed
+  const sortBy = search.sortBy
+  const sortOrder = search.sortOrder
+
   return useLiveSuspenseQuery(
     (q) => {
       let query = q.from({ todo: todoCollection })

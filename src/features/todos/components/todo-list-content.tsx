@@ -3,7 +3,7 @@ import { TodoItem } from "~/features/todos/components/todo-item"
 import { useTodosQuery } from "~/features/todos/hooks/use-todos-query"
 
 export function TodoListContent() {
-  const routeApi = getRouteApi("/")
+  const routeApi = getRouteApi("/_authenticated/")
   const search = routeApi.useSearch()
   const q = search.q ?? ""
 

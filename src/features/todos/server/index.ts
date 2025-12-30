@@ -2,8 +2,10 @@ import { Elysia } from "elysia"
 import { TodoService } from "~/features/todos/server/service"
 import { TodoModel } from "~/features/todos/server/model"
 import { DatabaseError, TodoNotFoundError } from "~/features/todos/server/errors"
+import { sessionMiddleware } from "~/lib/session-middleware"
 
 export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
+  .use(sessionMiddleware)
   .error({
     DatabaseError,
     TodoNotFoundError,
@@ -32,8 +34,8 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   })
   .get(
     "/",
-    async () => {
-      return await TodoService.getAll()
+    async ({ user }) => {
+      return await TodoService.getAll(user.id)
     },
     {
       response: {
@@ -47,8 +49,8 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   )
   .post(
     "/",
-    async ({ body }) => {
-      return await TodoService.create(body.text)
+    async ({ body, user }) => {
+      return await TodoService.create(body.text, user.id)
     },
     {
       body: TodoModel.createBody,
@@ -63,11 +65,15 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   )
   .patch(
     "/:id",
-    async ({ params, body }) => {
-      return await TodoService.update(params.id, {
-        text: body.text,
-        completed: body.completed,
-      })
+    async ({ params, body, user }) => {
+      return await TodoService.update(
+        params.id,
+        {
+          text: body.text,
+          completed: body.completed,
+        },
+        user.id,
+      )
     },
     {
       params: TodoModel.todoParams,
@@ -83,8 +89,8 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   )
   .delete(
     "/:id",
-    async ({ params }) => {
-      return await TodoService.delete(params.id)
+    async ({ params, user }) => {
+      return await TodoService.delete(params.id, user.id)
     },
     {
       params: TodoModel.todoParams,
@@ -93,6 +99,21 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
       },
       detail: {
         summary: "Delete a todo",
+        tags: ["Todos"],
+      },
+    },
+  )
+  .post(
+    "/batch/delete-old",
+    async () => {
+      return await TodoService.deleteOldTodos()
+    },
+    {
+      response: {
+        200: TodoModel.deleteResponse,
+      },
+      detail: {
+        summary: "Manually trigger batch job to delete old todos (24+ hours)",
         tags: ["Todos"],
       },
     },

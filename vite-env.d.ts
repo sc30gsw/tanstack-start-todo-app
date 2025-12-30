@@ -9,6 +9,10 @@ interface ImportMetaEnv {
   readonly TURSO_DATABASE_URL: string
   readonly TURSO_AUTH_TOKEN: string
   readonly VITE_APP_URL: string
+  readonly WORKOS_CLIENT_ID: string
+  readonly WORKOS_API_KEY: string
+  readonly WORKOS_REDIRECT_URI: string
+  readonly WORKOS_COOKIE_PASSWORD: string
 }
 
 interface ImportMeta {

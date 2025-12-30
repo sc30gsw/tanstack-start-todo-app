@@ -10,7 +10,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { valibotValidator } from "@tanstack/valibot-adapter"
 import appCss from "../styles.css?url"
 import { defaultSearchParams, searchSchema } from "~/features/todos/schemas/search-schema"
-import type { SearchParams } from "~/features/todos/schemas/search-schema"
+import { AuthKitProvider } from "@workos/authkit-tanstack-react-start/client"
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -28,7 +28,7 @@ export const Route = createRootRoute({
     sortBy,
     sortOrder,
   }),
-  loader: ({ deps }): SearchParams => {
+  loader: async ({ deps }) => {
     return {
       q: deps.q,
       completed: deps.completed,
@@ -57,8 +57,10 @@ function RootComponent() {
       <body>
         <main className="min-h-screen bg-gray-50 py-12 px-4">
           <div className="mx-auto max-w-2xl">
-            <Outlet />
-            <Footer />
+            <AuthKitProvider>
+              <Outlet />
+              <Footer />
+            </AuthKitProvider>
           </div>
         </main>
         <TanStackRouterDevtools position="bottom-right" />

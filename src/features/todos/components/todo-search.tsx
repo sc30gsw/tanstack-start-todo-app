@@ -2,7 +2,7 @@ import { getRouteApi } from "@tanstack/react-router"
 import type { SearchParams } from "~/features/todos/schemas/search-schema"
 
 export function TodoSearch() {
-  const routeApi = getRouteApi("/")
+  const routeApi = getRouteApi("/_authenticated/")
   const search = routeApi.useSearch()
   const navigate = routeApi.useNavigate()
 

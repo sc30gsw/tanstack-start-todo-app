@@ -1,16 +1,18 @@
 import { db } from "~/db"
 import { todos } from "~/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, and, lt } from "drizzle-orm"
 import { DatabaseError, TodoNotFoundError } from "~/features/todos/server/errors"
 
 export abstract class TodoService {
-  static async getAll() {
+  static async getAll(userId: string) {
     if (!db) {
       throw new DatabaseError("Database not initialized")
     }
 
     try {
-      const result = await db.query.todos.findMany()
+      const result = await db.query.todos.findMany({
+        where: eq(todos.user_id, userId),
+      })
 
       return result
     } catch (error) {
@@ -20,7 +22,7 @@ export abstract class TodoService {
     }
   }
 
-  static async create(text: (typeof todos.$inferInsert)["text"]) {
+  static async create(text: (typeof todos.$inferInsert)["text"], userId: string) {
     if (!db) {
       throw new DatabaseError("Database not initialized")
     }
@@ -30,6 +32,7 @@ export abstract class TodoService {
         .insert(todos)
         .values({
           text,
+          user_id: userId,
         })
         .returning()
 
@@ -52,19 +55,29 @@ export abstract class TodoService {
   static async update(
     id: (typeof todos.$inferSelect)["id"],
     data: Partial<Pick<typeof todos.$inferInsert, "text" | "completed">>,
+    userId: string,
   ) {
     if (!db) {
       throw new DatabaseError("Database not initialized")
     }
 
     try {
+      // まず、ToDoが存在し、かつユーザーが所有していることを確認
+      const existing = await db.query.todos.findFirst({
+        where: and(eq(todos.id, id), eq(todos.user_id, userId)),
+      })
+
+      if (!existing) {
+        throw new TodoNotFoundError(id)
+      }
+
       const result = await db
         .update(todos)
         .set({
           text: data.text,
           completed: data.completed ?? false,
         })
-        .where(eq(todos.id, id))
+        .where(and(eq(todos.id, id), eq(todos.user_id, userId)))
         .returning()
 
       const todo = result[0]
@@ -88,21 +101,22 @@ export abstract class TodoService {
     }
   }
 
-  static async delete(id: (typeof todos.$inferSelect)["id"]) {
+  static async delete(id: (typeof todos.$inferSelect)["id"], userId: string) {
     if (!db) {
       throw new DatabaseError("Database not initialized")
     }
 
     try {
+      // まず、ToDoが存在し、かつユーザーが所有していることを確認
       const existing = await db.query.todos.findFirst({
-        where: eq(todos.id, id),
+        where: and(eq(todos.id, id), eq(todos.user_id, userId)),
       })
 
       if (!existing) {
         throw new TodoNotFoundError(id)
       }
 
-      await db.delete(todos).where(eq(todos.id, id))
+      await db.delete(todos).where(and(eq(todos.id, id), eq(todos.user_id, userId)))
 
       return { success: true }
     } catch (error) {
@@ -112,6 +126,27 @@ export abstract class TodoService {
 
       throw new DatabaseError(
         `Failed to delete todo: ${error instanceof Error ? error.message : "Unknown error"}`,
+      )
+    }
+  }
+
+  static async deleteOldTodos() {
+    if (!db) {
+      throw new DatabaseError("Database not initialized")
+    }
+
+    try {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+
+      const result = await db
+        .delete(todos)
+        .where(lt(todos.created_at, twentyFourHoursAgo))
+        .returning()
+
+      return { deletedCount: result.length, success: true }
+    } catch (error) {
+      throw new DatabaseError(
+        `Failed to delete old todos: ${error instanceof Error ? error.message : "Unknown error"}`,
       )
     }
   }

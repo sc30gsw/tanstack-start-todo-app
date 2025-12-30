@@ -5,7 +5,7 @@ import { eq, like } from "@tanstack/db"
 import { getRouteApi } from "@tanstack/react-router"
 
 export function useTodosQuery() {
-  const routeApi = getRouteApi("/")
+  const routeApi = getRouteApi("/_authenticated/")
   const search = routeApi.useSearch()
   const searchQuery = search.q ?? ""
   const completed = search.completed

@@ -1,9 +1,12 @@
 import { useForm } from "@tanstack/react-form"
+import { useAuth } from "@workos/authkit-tanstack-react-start/client"
 import { todoCollection } from "~/features/todos/collections"
 import { todoFormSchema } from "~/features/todos/schemas/todo-form-schema"
 import { cn } from "~/utils/cn"
 
 export function TodoForm() {
+  const { user } = useAuth()
+
   const form = useForm({
     defaultValues: {
       text: "",
@@ -18,6 +21,7 @@ export function TodoForm() {
         completed: false,
         created_at: new Date(),
         updated_at: new Date(),
+        user_id: user?.id ?? "",
       })
 
       form.reset()

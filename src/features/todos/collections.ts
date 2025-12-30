@@ -2,7 +2,7 @@ import { createCollection } from "@tanstack/react-db"
 import { queryCollectionOptions } from "@tanstack/query-db-collection"
 import { getTreaty } from "~/routes/api/$"
 import { QueryClient } from "@tanstack/react-query"
-import { todoSchema } from "~/features/todos/schemas/todo-schema"
+import { todoSchema } from "~/features/todos/types/schemas/todo-schema"
 import { getAuth } from "@workos/authkit-tanstack-react-start"
 
 const queryClient = new QueryClient()
@@ -18,12 +18,6 @@ export const todoCollection = createCollection(
 
       if (!user) {
         throw new Error("User not found")
-      }
-
-      try {
-        await api.todos.batch["delete-old"].post({ headers: { authorization: user.id } })
-      } catch (error) {
-        console.error("Batch job error:", error)
       }
 
       const response = await api.todos.get({ headers: { authorization: user.id } })
@@ -66,7 +60,16 @@ export const todoCollection = createCollection(
         throw new Error("User not found")
       }
 
-      await api.todos.post({ text: newTodo.text }, { headers: { authorization: user.id } })
+      await api.todos.post(
+        {
+          text: newTodo.text,
+          priority: newTodo.priority ?? null,
+          urgency: newTodo.urgency ?? null,
+          estimated_time: newTodo.estimated_time ?? null,
+          actual_time: newTodo.actual_time ?? null,
+        },
+        { headers: { authorization: user.id } },
+      )
     },
     onUpdate: async ({ transaction }) => {
       const { original, modified } = transaction.mutations[0]
@@ -85,7 +88,10 @@ export const todoCollection = createCollection(
         {
           text: modified.text,
           completed: modified.completed,
-          user_id: user.id,
+          priority: modified.priority ?? null,
+          urgency: modified.urgency ?? null,
+          estimated_time: modified.estimated_time ?? null,
+          actual_time: modified.actual_time ?? null,
         },
         {
           headers: { authorization: user.id },

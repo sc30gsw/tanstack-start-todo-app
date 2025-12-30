@@ -9,7 +9,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { valibotValidator } from "@tanstack/valibot-adapter"
 import appCss from "../styles.css?url"
-import { defaultSearchParams, searchSchema } from "~/features/todos/schemas/search-schema"
+import { defaultSearchParams, searchSchema } from "~/features/todos/types/schemas/search-schema"
 import { AuthKitProvider } from "@workos/authkit-tanstack-react-start/client"
 
 export const Route = createRootRoute({

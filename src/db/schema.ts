@@ -33,6 +33,10 @@ export const todos = sqliteTable("todos", {
     .$defaultFn(() => crypto.randomUUID()),
   text: text("text").notNull(),
   completed: integer("completed", { mode: "boolean" }).default(false),
+  priority: text("priority").default("medium"),
+  urgency: text("urgency").default("medium"),
+  estimated_time: integer("estimated_time"),
+  actual_time: integer("actual_time"),
   user_id: text("user_id").notNull(),
   created_at: integer("created_at", { mode: "timestamp" })
     .notNull()

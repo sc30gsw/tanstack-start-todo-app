@@ -1,5 +1,4 @@
-import { object, string, boolean, optional, picklist } from "valibot"
-import type { InferInput, InferOutput } from "valibot"
+import * as v from "valibot"
 
 export const defaultSearchParams = {
   q: "",
@@ -10,17 +9,17 @@ export const defaultSearchParams = {
   sortOrder: "desc",
 } as const
 
-export const searchSchema = object({
-  q: optional(string(), defaultSearchParams.q),
-  completed: optional(boolean(), defaultSearchParams.completed),
-  priority: optional(picklist(["high", "medium", "low"]), defaultSearchParams.priority),
-  urgency: optional(picklist(["high", "medium", "low"]), defaultSearchParams.urgency),
-  sortBy: optional(
-    picklist(["createdAt", "text", "priority", "urgency"]),
+export const searchSchema = v.object({
+  q: v.optional(v.string(), defaultSearchParams.q),
+  completed: v.optional(v.boolean(), defaultSearchParams.completed),
+  priority: v.optional(v.picklist(["high", "medium", "low"]), defaultSearchParams.priority),
+  urgency: v.optional(v.picklist(["high", "medium", "low"]), defaultSearchParams.urgency),
+  sortBy: v.optional(
+    v.picklist(["createdAt", "text", "priority", "urgency"]),
     defaultSearchParams.sortBy,
   ),
-  sortOrder: optional(picklist(["asc", "desc"]), defaultSearchParams.sortOrder),
+  sortOrder: v.optional(v.picklist(["asc", "desc"]), defaultSearchParams.sortOrder),
 })
 
-export type SearchParams = InferOutput<typeof searchSchema>
-export type SearchParamsInput = InferInput<typeof searchSchema>
+export type SearchParams = v.InferOutput<typeof searchSchema>
+export type SearchParamsInput = v.InferInput<typeof searchSchema>

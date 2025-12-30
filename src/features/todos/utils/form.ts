@@ -1,24 +1,5 @@
 import { cn } from "~/utils/cn"
 
-export function formatErrorMessage(
-  errors: Array<Partial<Record<"message", string>> | string | undefined>,
-  defaultMessage = "Invalid input",
-): string {
-  return errors
-    .map((err) => {
-      if (typeof err === "string") {
-        return err
-      }
-
-      if (typeof err === "object" && err?.message) {
-        return err.message
-      }
-
-      return defaultMessage
-    })
-    .join(", ")
-}
-
 export function getInputFieldClassName(
   hasError: boolean,
   isSubmitted: boolean,

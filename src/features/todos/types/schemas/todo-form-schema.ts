@@ -1,22 +1,13 @@
-import {
-  object,
-  string,
-  minLength,
-  pipe,
-  number,
-  minValue,
-  literal,
-  union,
-  nullable,
-  type InferInput,
-} from "valibot"
+import * as v from "valibot"
 
-export const todoFormSchema = object({
-  text: pipe(string(), minLength(1, "Todo text is required")),
-  priority: union([literal("high"), literal("medium"), literal("low")]),
-  urgency: union([literal("high"), literal("medium"), literal("low")]),
-  estimatedTime: nullable(pipe(number(), minValue(0, "Estimated time must be 0 or greater"))),
-  actualTime: nullable(pipe(number(), minValue(0, "Actual time must be 0 or greater"))),
+export const todoFormSchema = v.object({
+  text: v.pipe(v.string(), v.minLength(1, "Todo text is required")),
+  priority: v.union([v.literal("high"), v.literal("medium"), v.literal("low")]),
+  urgency: v.union([v.literal("high"), v.literal("medium"), v.literal("low")]),
+  estimatedTime: v.nullable(
+    v.pipe(v.number(), v.minValue(0, "Estimated time must be 0 or greater")),
+  ),
+  actualTime: v.nullable(v.pipe(v.number(), v.minValue(0, "Actual time must be 0 or greater"))),
 })
 
-export type TodoFormValues = InferInput<typeof todoFormSchema>
+export type TodoFormValues = v.InferInput<typeof todoFormSchema>

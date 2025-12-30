@@ -14,11 +14,7 @@ import {
   BUTTON_LABELS,
 } from "~/features/todos/constants/form"
 import { minutesToHoursAndMinutes, createTimeInputHandler } from "~/features/todos/utils/time"
-import {
-  formatErrorMessage,
-  getTextInputClassName,
-  getInputFieldClassName,
-} from "~/features/todos/utils/form"
+import { getTextInputClassName, getInputFieldClassName } from "~/features/todos/utils/form"
 
 export function TodoForm() {
   const { user } = useAuth()
@@ -26,7 +22,7 @@ export function TodoForm() {
   const form = useForm({
     defaultValues: DEFAULT_FORM_VALUES,
     validators: {
-      onSubmit: todoFormSchema,
+      onChange: todoFormSchema,
     },
     onSubmit: async ({ value }) => {
       todoCollection.insert({
@@ -45,7 +41,6 @@ export function TodoForm() {
       form.reset()
     },
   })
-  console.log("🚀 ~ TodoForm ~ form:", form.state.errors)
 
   return (
     <form
@@ -68,7 +63,7 @@ export function TodoForm() {
                 placeholder={FORM_PLACEHOLDERS.text}
                 className={getTextInputClassName(
                   field.state.meta.errors.length > 0,
-                  form.state.isSubmitted,
+                  form.state.isSubmitted || field.state.meta.isTouched,
                 )}
               />
               <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
@@ -83,9 +78,12 @@ export function TodoForm() {
                 )}
               </form.Subscribe>
             </div>
-            {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-              <p className="text-sm text-red-600">{formatErrorMessage(field.state.meta.errors)}</p>
-            )}
+            {(form.state.isSubmitted || field.state.meta.isTouched) &&
+              field.state.meta.errors.length > 0 && (
+                <p className="text-sm text-red-600">
+                  {field.state.meta.errors.map((err) => err?.message ?? "Invalid input").join(", ")}
+                </p>
+              )}
           </div>
         )}
       </form.Field>
@@ -142,11 +140,14 @@ export function TodoForm() {
                   </option>
                 ))}
               </select>
-              {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-600">
-                  {field.state.meta.errors.map((err) => err?.message ?? "Invalid input").join(", ")}
-                </p>
-              )}
+              {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                field.state.meta.errors.length > 0 && (
+                  <p className="text-sm text-red-600">
+                    {field.state.meta.errors
+                      .map((err) => err?.message ?? "Invalid input")
+                      .join(", ")}
+                  </p>
+                )}
             </div>
           )}
         </form.Field>
@@ -199,11 +200,14 @@ export function TodoForm() {
                     />
                   </div>
                 </div>
-                {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-red-600">
-                    {formatErrorMessage(field.state.meta.errors)}
-                  </p>
-                )}
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
               </div>
             )
           }}
@@ -255,11 +259,14 @@ export function TodoForm() {
                     />
                   </div>
                 </div>
-                {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-red-600">
-                    {formatErrorMessage(field.state.meta.errors)}
-                  </p>
-                )}
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
               </div>
             )
           }}

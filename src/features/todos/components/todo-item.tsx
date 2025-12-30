@@ -16,7 +16,7 @@ import {
   URGENCY_OPTIONS,
 } from "~/features/todos/constants/form"
 import { minutesToHoursAndMinutes, createTimeInputHandler } from "~/features/todos/utils/time"
-import { formatErrorMessage, getInputFieldClassName } from "~/features/todos/utils/form"
+import { getInputFieldClassName } from "~/features/todos/utils/form"
 
 type TodoItemViewProps = {
   todo: Todo
@@ -111,7 +111,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
   const form = useForm({
     defaultValues,
     validators: {
-      onSubmit: todoFormSchema,
+      onChange: todoFormSchema,
     },
     onSubmit: async ({ value }) => {
       todoCollection.update(todo.id, (draft) => {
@@ -148,7 +148,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
         >
           <form.Field name="text">
             {(field) => (
-              <div className="flex flex-col gap-2">
+              <div className="relative flex flex-col gap-2">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -157,7 +157,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                     onChange={(e) => field.handleChange(e.target.value)}
                     className={getInputFieldClassName(
                       field.state.meta.errors.length > 0,
-                      form.state.isSubmitted,
+                      form.state.isSubmitted || field.state.meta.isTouched,
                       "flex-1 rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                     )}
                   />
@@ -185,11 +185,14 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                     )}
                   </form.Subscribe>
                 </div>
-                {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-red-600">
-                    {formatErrorMessage(field.state.meta.errors)}
-                  </p>
-                )}
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="absolute top-full left-0 mt-1 text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
               </div>
             )}
           </form.Field>
@@ -215,7 +218,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                 onChange={(e) => field.handleChange(e.target.value as TodoFormValues["priority"])}
                 className={getInputFieldClassName(
                   field.state.meta.errors.length > 0,
-                  form.state.isSubmitted,
+                  form.state.isSubmitted || field.state.meta.isTouched,
                 )}
               >
                 {PRIORITY_OPTIONS.map((option) => (
@@ -224,11 +227,16 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                   </option>
                 ))}
               </select>
-              {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-600">
-                  {formatErrorMessage(field.state.meta.errors)}
-                </p>
-              )}
+              <div className="min-h-6">
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
+              </div>
             </div>
           )}
         </form.Field>
@@ -245,7 +253,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                 onChange={(e) => field.handleChange(e.target.value as TodoFormValues["urgency"])}
                 className={getInputFieldClassName(
                   field.state.meta.errors.length > 0,
-                  form.state.isSubmitted,
+                  form.state.isSubmitted || field.state.meta.isTouched,
                 )}
               >
                 {URGENCY_OPTIONS.map((option) => (
@@ -254,11 +262,16 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                   </option>
                 ))}
               </select>
-              {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-600">
-                  {formatErrorMessage(field.state.meta.errors)}
-                </p>
-              )}
+              <div className="min-h-6">
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
+              </div>
             </div>
           )}
         </form.Field>
@@ -293,7 +306,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                       placeholder={FORM_PLACEHOLDERS.hours}
                       className={getInputFieldClassName(
                         field.state.meta.errors.length > 0,
-                        form.state.isSubmitted,
+                        form.state.isSubmitted || field.state.meta.isTouched,
                         "w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                       )}
                     />
@@ -308,17 +321,22 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                       placeholder={FORM_PLACEHOLDERS.minutes}
                       className={getInputFieldClassName(
                         field.state.meta.errors.length > 0,
-                        form.state.isSubmitted,
+                        form.state.isSubmitted || field.state.meta.isTouched,
                         "w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                       )}
                     />
                   </div>
                 </div>
-                {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-red-600">
-                    {formatErrorMessage(field.state.meta.errors)}
-                  </p>
-                )}
+                <div className="min-h-6">
+                  {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                    field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-red-600">
+                        {field.state.meta.errors
+                          .map((err) => err?.message ?? "Invalid input")
+                          .join(", ")}
+                      </p>
+                    )}
+                </div>
               </div>
             )
           }}
@@ -352,7 +370,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                       placeholder={FORM_PLACEHOLDERS.hours}
                       className={getInputFieldClassName(
                         field.state.meta.errors.length > 0,
-                        form.state.isSubmitted,
+                        form.state.isSubmitted || field.state.meta.isTouched,
                         "w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                       )}
                     />
@@ -367,17 +385,22 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                       placeholder={FORM_PLACEHOLDERS.minutes}
                       className={getInputFieldClassName(
                         field.state.meta.errors.length > 0,
-                        form.state.isSubmitted,
+                        form.state.isSubmitted || field.state.meta.isTouched,
                         "w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2",
                       )}
                     />
                   </div>
                 </div>
-                {form.state.isSubmitted && field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-red-600">
-                    {formatErrorMessage(field.state.meta.errors)}
-                  </p>
-                )}
+                <div className="min-h-6">
+                  {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                    field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-red-600">
+                        {field.state.meta.errors
+                          .map((err) => err?.message ?? "Invalid input")
+                          .join(", ")}
+                      </p>
+                    )}
+                </div>
               </div>
             )
           }}

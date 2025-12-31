@@ -1,10 +1,14 @@
+import { useRef } from "react"
 import { TodoForm } from "~/features/todos/components/todo-form"
 import { TODO_MODAL_ID } from "~/features/todos/constants"
 import { cn } from "~/utils/cn"
 
 export function TodoFormModal() {
+  const modalRef = useRef<HTMLDivElement>(null)
+
   return (
     <div
+      ref={modalRef}
       id={TODO_MODAL_ID}
       popover="auto"
       className={cn(
@@ -41,7 +45,13 @@ export function TodoFormModal() {
         </button>
       </div>
       <div className="overflow-y-auto">
-        <TodoForm />
+        <TodoForm
+          onSuccess={() => {
+            if (modalRef.current) {
+              modalRef.current.hidePopover()
+            }
+          }}
+        />
       </div>
     </div>
   )

@@ -15,8 +15,9 @@ import {
 } from "~/features/todos/constants/form"
 import { minutesToHoursAndMinutes, createTimeInputHandler } from "~/features/todos/utils/time"
 import { getTextInputClassName, getInputFieldClassName } from "~/features/todos/utils/form"
+import { Loader } from "~/components/loader"
 
-export function TodoForm() {
+export function TodoForm({ onSuccess }: Record<"onSuccess", () => void>) {
   const { user } = useAuth()
 
   const form = useForm({
@@ -39,6 +40,7 @@ export function TodoForm() {
       })
 
       form.reset()
+      onSuccess?.()
     },
   })
 
@@ -71,9 +73,9 @@ export function TodoForm() {
                   <button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="relative rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600 min-w-[100px] min-h-[40px] flex items-center justify-center border-2 border-blue-600"
                   >
-                    {isSubmitting ? "..." : BUTTON_LABELS.add}
+                    {isSubmitting ? <Loader /> : BUTTON_LABELS.add}
                   </button>
                 )}
               </form.Subscribe>

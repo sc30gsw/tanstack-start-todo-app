@@ -17,6 +17,7 @@ import {
 } from "~/features/todos/constants/form"
 import { minutesToHoursAndMinutes, createTimeInputHandler } from "~/features/todos/utils/time"
 import { getInputFieldClassName } from "~/features/todos/utils/form"
+import { Loader } from "~/components/loader"
 
 type TodoItemViewProps = {
   todo: Todo
@@ -167,9 +168,12 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                         <button
                           type="submit"
                           disabled={!canSubmit || isSubmitting}
-                          className="rounded px-3 py-1 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className={cn(
+                            "rounded px-3 py-1 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent min-w-[80px] min-h-[32px] flex items-center justify-center",
+                            isSubmitting && "border-2 ring-1",
+                          )}
                         >
-                          {isSubmitting ? "..." : BUTTON_LABELS.save}
+                          {isSubmitting ? <Loader /> : BUTTON_LABELS.save}
                         </button>
                         <button
                           type="button"

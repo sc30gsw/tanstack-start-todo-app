@@ -148,7 +148,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
         >
           <form.Field name="text">
             {(field) => (
-              <div className="relative flex flex-col gap-2">
+              <div className="relative">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -205,77 +205,98 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <form.Field name="priority">
-          {(field) => (
-            <div className="flex flex-col gap-2">
-              <label htmlFor={`priority-${todo.id}`} className="text-sm font-medium text-gray-700">
-                {FORM_LABELS.priority}
-              </label>
-              <select
-                id={`priority-${todo.id}`}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as TodoFormValues["priority"])}
-                className={getInputFieldClassName(
-                  field.state.meta.errors.length > 0,
-                  form.state.isSubmitted || field.state.meta.isTouched,
-                )}
-              >
-                {PRIORITY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <div className="min-h-6">
-                {(form.state.isSubmitted || field.state.meta.isTouched) &&
-                  field.state.meta.errors.length > 0 && (
-                    <p className="text-sm text-red-600">
-                      {field.state.meta.errors
-                        .map((err) => err?.message ?? "Invalid input")
-                        .join(", ")}
-                    </p>
-                  )}
-              </div>
-            </div>
-          )}
-        </form.Field>
+      <form.Subscribe
+        selector={(state) => [
+          state.fieldMeta.text?.errors,
+          state.fieldMeta.text?.isTouched,
+          state.isSubmitted,
+        ]}
+      >
+        {([textErrors, isTextTouched, isSubmitted]) => {
+          const hasTextError =
+            (isSubmitted || isTextTouched) && Array.isArray(textErrors) && textErrors.length > 0
 
-        <form.Field name="urgency">
-          {(field) => (
-            <div className="flex flex-col gap-2">
-              <label htmlFor={`urgency-${todo.id}`} className="text-sm font-medium text-gray-700">
-                {FORM_LABELS.urgency}
-              </label>
-              <select
-                id={`urgency-${todo.id}`}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value as TodoFormValues["urgency"])}
-                className={getInputFieldClassName(
-                  field.state.meta.errors.length > 0,
-                  form.state.isSubmitted || field.state.meta.isTouched,
+          return (
+            <div className={cn("grid grid-cols-2 gap-4", hasTextError && "mt-8")}>
+              <form.Field name="priority">
+                {(field) => (
+                  <div className="relative flex flex-col gap-2">
+                    <label
+                      htmlFor={`priority-${todo.id}`}
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      {FORM_LABELS.priority}
+                    </label>
+                    <select
+                      id={`priority-${todo.id}`}
+                      value={field.state.value}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value as TodoFormValues["priority"])
+                      }
+                      className={getInputFieldClassName(
+                        field.state.meta.errors.length > 0,
+                        form.state.isSubmitted || field.state.meta.isTouched,
+                      )}
+                    >
+                      {PRIORITY_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                      field.state.meta.errors.length > 0 && (
+                        <p className="absolute top-full left-0 mt-1 text-sm text-red-600">
+                          {field.state.meta.errors
+                            .map((err) => err?.message ?? "Invalid input")
+                            .join(", ")}
+                        </p>
+                      )}
+                  </div>
                 )}
-              >
-                {URGENCY_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <div className="min-h-6">
-                {(form.state.isSubmitted || field.state.meta.isTouched) &&
-                  field.state.meta.errors.length > 0 && (
-                    <p className="text-sm text-red-600">
-                      {field.state.meta.errors
-                        .map((err) => err?.message ?? "Invalid input")
-                        .join(", ")}
-                    </p>
-                  )}
-              </div>
+              </form.Field>
+
+              <form.Field name="urgency">
+                {(field) => (
+                  <div className="relative flex flex-col gap-2">
+                    <label
+                      htmlFor={`urgency-${todo.id}`}
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      {FORM_LABELS.urgency}
+                    </label>
+                    <select
+                      id={`urgency-${todo.id}`}
+                      value={field.state.value}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value as TodoFormValues["urgency"])
+                      }
+                      className={getInputFieldClassName(
+                        field.state.meta.errors.length > 0,
+                        form.state.isSubmitted || field.state.meta.isTouched,
+                      )}
+                    >
+                      {URGENCY_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                      field.state.meta.errors.length > 0 && (
+                        <p className="absolute top-full left-0 mt-1 text-sm text-red-600">
+                          {field.state.meta.errors
+                            .map((err) => err?.message ?? "Invalid input")
+                            .join(", ")}
+                        </p>
+                      )}
+                  </div>
+                )}
+              </form.Field>
             </div>
-          )}
-        </form.Field>
-      </div>
+          )
+        }}
+      </form.Subscribe>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         <form.Field name="estimatedTime">
@@ -287,7 +308,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
             )
 
             return (
-              <div className="flex flex-col gap-2">
+              <div className="relative flex flex-col gap-2">
                 <label
                   htmlFor={`estimatedTime-${todo.id}`}
                   className="text-sm font-medium text-gray-700"
@@ -327,16 +348,14 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                     />
                   </div>
                 </div>
-                <div className="min-h-6">
-                  {(form.state.isSubmitted || field.state.meta.isTouched) &&
-                    field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-red-600">
-                        {field.state.meta.errors
-                          .map((err) => err?.message ?? "Invalid input")
-                          .join(", ")}
-                      </p>
-                    )}
-                </div>
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="absolute top-full left-0 mt-1 text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
               </div>
             )
           }}
@@ -351,7 +370,7 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
             )
 
             return (
-              <div className="flex flex-col gap-2">
+              <div className="relative flex flex-col gap-2">
                 <label
                   htmlFor={`actualTime-${todo.id}`}
                   className="text-sm font-medium text-gray-700"
@@ -391,16 +410,14 @@ const TodoItemEdit = memo(function TodoItemEdit({ todo, onCancel }: TodoItemEdit
                     />
                   </div>
                 </div>
-                <div className="min-h-6">
-                  {(form.state.isSubmitted || field.state.meta.isTouched) &&
-                    field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-red-600">
-                        {field.state.meta.errors
-                          .map((err) => err?.message ?? "Invalid input")
-                          .join(", ")}
-                      </p>
-                    )}
-                </div>
+                {(form.state.isSubmitted || field.state.meta.isTouched) &&
+                  field.state.meta.errors.length > 0 && (
+                    <p className="absolute top-full left-0 mt-1 text-sm text-red-600">
+                      {field.state.meta.errors
+                        .map((err) => err?.message ?? "Invalid input")
+                        .join(", ")}
+                    </p>
+                  )}
               </div>
             )
           }}

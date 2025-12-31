@@ -9,6 +9,8 @@ export function useTodosQuery() {
   const search = routeApi.useSearch()
   const searchQuery = search.q ?? ""
   const completed = search.completed
+  const priority = search.priority
+  const urgency = search.urgency
   const sortBy = search.sortBy
   const sortOrder = search.sortOrder
 
@@ -18,6 +20,14 @@ export function useTodosQuery() {
 
       if (typeof completed === "boolean") {
         query = query.where(({ todo }) => eq(todo.completed, completed))
+      }
+
+      if (priority !== undefined) {
+        query = query.where(({ todo }) => eq(todo.priority, priority))
+      }
+
+      if (urgency !== undefined) {
+        query = query.where(({ todo }) => eq(todo.urgency, urgency))
       }
 
       if (searchQuery) {
@@ -34,10 +44,18 @@ export function useTodosQuery() {
         case "text":
           query = query.orderBy(({ todo }) => todo.text, sortOrder)
           break
+
+        case "priority":
+          query = query.orderBy(({ todo }) => todo.priority, sortOrder)
+          break
+
+        case "urgency":
+          query = query.orderBy(({ todo }) => todo.urgency, sortOrder)
+          break
       }
 
       return query
     },
-    [completed, searchQuery, sortBy, sortOrder],
+    [completed, priority, urgency, searchQuery, sortBy, sortOrder],
   )
 }

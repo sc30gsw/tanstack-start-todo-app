@@ -1,23 +1,30 @@
+import { useTransition } from "react"
 import { getRouteApi } from "@tanstack/react-router"
 import { useAuth } from "@workos/authkit-tanstack-react-start/client"
-import { useTransition } from "react"
-import { TodoForm } from "~/features/todos/components/todo-form"
 import { TodoListWithSearch } from "~/features/todos/components/todo-list-with-search"
+import { TodoFormModal } from "~/features/todos/components/todo-form-modal"
+import { TODO_MODAL_ID } from "~/features/todos/constants"
 
 export function TodoList() {
   return (
     <div className="grid grid-rows-[auto_auto_1fr] gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-        <div className="flex items-center justify-between">
-          <h1 className="text-4xl font-bold text-gray-900">Todo App</h1>
-          <SignOutButton />
-        </div>
-        <div className="flex items-center gap-4">
-          <ParentRouteContextText />
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-bold text-gray-900">Todo App</h1>
+        <SignOutButton />
       </div>
-      <TodoForm />
+      <div className="flex items-center justify-between">
+        <ParentRouteContextText />
+        <button
+          type="button"
+          popoverTarget={TODO_MODAL_ID}
+          popoverTargetAction="show"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+        >
+          + 新しいTodo
+        </button>
+      </div>
       <TodoListWithSearch />
+      <TodoFormModal />
     </div>
   )
 }

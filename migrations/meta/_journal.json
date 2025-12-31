@@ -15,6 +15,13 @@
       "when": 1767101070915,
       "tag": "0001_overjoyed_kang",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1767133404511,
+      "tag": "0002_cold_thing",
+      "breakpoints": true
     }
   ]
 }

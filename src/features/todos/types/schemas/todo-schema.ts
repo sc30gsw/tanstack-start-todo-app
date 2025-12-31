@@ -1,7 +1,7 @@
 import { createSelectSchema } from "drizzle-valibot"
-import type { InferOutput } from "valibot"
+import * as v from "valibot"
 import { todos } from "~/db/schema"
 
 export const todoSchema = createSelectSchema(todos)
 
-export type Todo = InferOutput<typeof todoSchema>
+export type Todo = v.InferOutput<typeof todoSchema>

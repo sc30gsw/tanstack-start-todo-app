@@ -50,7 +50,7 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   .post(
     "/",
     async ({ body, user }) => {
-      return await TodoService.create(body.text, user.id)
+      return await TodoService.create(body, user.id)
     },
     {
       body: TodoModel.createBody,
@@ -66,14 +66,7 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
   .patch(
     "/:id",
     async ({ params, body, user }) => {
-      return await TodoService.update(
-        params.id,
-        {
-          text: body.text,
-          completed: body.completed,
-        },
-        user.id,
-      )
+      return await TodoService.update(params.id, body, user.id)
     },
     {
       params: TodoModel.todoParams,
@@ -99,21 +92,6 @@ export const todoPlugin = new Elysia({ prefix: "/todos", name: "todo" })
       },
       detail: {
         summary: "Delete a todo",
-        tags: ["Todos"],
-      },
-    },
-  )
-  .post(
-    "/batch/delete-old",
-    async () => {
-      return await TodoService.deleteOldTodos()
-    },
-    {
-      response: {
-        200: TodoModel.deleteResponse,
-      },
-      detail: {
-        summary: "Manually trigger batch job to delete old todos (24+ hours)",
         tags: ["Todos"],
       },
     },

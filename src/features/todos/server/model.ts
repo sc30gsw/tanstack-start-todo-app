@@ -6,10 +6,18 @@ const todoSelectSchema = createSelectSchema(todos)
 const todoInsertSchema = createInsertSchema(todos)
 
 export namespace TodoModel {
-  export const createBody = t.Pick(todoInsertSchema, ["text"])
+  export const createBody = t.Pick(todoInsertSchema, [
+    "text",
+    "priority",
+    "urgency",
+    "estimated_time",
+    "actual_time",
+  ])
   export type createBody = typeof createBody.static
 
-  export const updateBody = t.Partial(t.Omit(todoInsertSchema, ["id", "created_at", "updated_at"]))
+  export const updateBody = t.Partial(
+    t.Omit(todoInsertSchema, ["id", "user_id", "created_at", "updated_at"]),
+  )
   export type updateBody = typeof updateBody.static
 
   export const todoParams = t.Object({

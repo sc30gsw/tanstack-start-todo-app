@@ -6,24 +6,29 @@ import { BUTTON_LABELS, FORM_LABELS } from "~/features/todos/constants/form"
 import { TodoForm } from "./todo-form"
 import { getStatusColors } from "~/features/todos/utils/get-status-colors"
 import { getStatusLabel } from "~/features/todos/utils/get-status-label"
+import { ActualTimeInputModal } from "./actual-time-input-modal"
 
 type TodoItemViewProps = {
   todo: Todo
   onEdit: () => void
 }
 
-const TodoItemView = memo(function TodoItemView({ todo, onEdit }: TodoItemViewProps) {
+type TodoItemViewPropsWithModal = TodoItemViewProps & {
+  onCheckChange: (checked: boolean) => void
+}
+
+const TodoItemView = memo(function TodoItemView({
+  todo,
+  onEdit,
+  onCheckChange,
+}: TodoItemViewPropsWithModal) {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div className="flex items-center gap-3">
         <input
           type="checkbox"
           checked={todo.completed ?? false}
-          onChange={() =>
-            todoCollection.update(todo.id, (draft) => {
-              draft.completed = !(todo.completed ?? false)
-            })
-          }
+          onChange={(e) => onCheckChange(e.target.checked)}
           className="h-5 w-5 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
         />
         <span
@@ -85,6 +90,7 @@ const TodoItemView = memo(function TodoItemView({ todo, onEdit }: TodoItemViewPr
 
 export const TodoItem = memo(function TodoItem({ todo }: Record<"todo", Todo>) {
   const [isEditing, setIsEditing] = useState(false)
+  const [isActualTimeModalOpen, setIsActualTimeModalOpen] = useState(false)
 
   const handleEdit = useCallback(() => {
     setIsEditing(true)
@@ -94,9 +100,37 @@ export const TodoItem = memo(function TodoItem({ todo }: Record<"todo", Todo>) {
     setIsEditing(false)
   }, [])
 
-  return isEditing ? (
-    <TodoForm isEdit={isEditing} todo={todo} onCancel={handleCancel} />
-  ) : (
-    <TodoItemView todo={todo} onEdit={handleEdit} />
+  const handleCheckChange = useCallback(
+    (checked: boolean) => {
+      const wasCompleted = todo.completed ?? false
+
+      todoCollection.update(todo.id, (draft) => {
+        draft.completed = checked
+
+        if (!checked) {
+          draft.actual_time = null
+        }
+      })
+
+      if (checked && !wasCompleted) {
+        setIsActualTimeModalOpen(true)
+      }
+    },
+    [todo.id, todo.completed],
+  )
+
+  return (
+    <>
+      {isEditing ? (
+        <TodoForm isEdit={isEditing} todo={todo} onCancel={handleCancel} />
+      ) : (
+        <TodoItemView todo={todo} onEdit={handleEdit} onCheckChange={handleCheckChange} />
+      )}
+      <ActualTimeInputModal
+        todo={todo}
+        open={isActualTimeModalOpen}
+        onOpenChange={setIsActualTimeModalOpen}
+      />
+    </>
   )
 })

@@ -15,7 +15,7 @@ import {
 } from "~/features/todos/constants/form"
 import { minutesToHoursAndMinutes, createTimeInputHandler } from "~/features/todos/utils/time"
 import { getTextInputClassName, getInputFieldClassName } from "~/features/todos/utils/form"
-import { Loader } from "~/components/loader"
+import { Loader } from "~/components/ui/loader"
 import { cn } from "~/utils/cn"
 import type { Todo } from "~/features/todos/types/schemas/todo-schema"
 

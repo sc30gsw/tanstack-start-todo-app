@@ -1,5 +1,5 @@
 import type { TodoFormValues } from "~/features/todos/types/schemas/todo-form-schema"
-import type { getStatusLabel } from "~/features/todos/utils/statuses"
+import type { getStatusLabel } from "~/features/todos/utils/get-status-label"
 
 export const DEFAULT_FORM_VALUES: TodoFormValues = {
   text: "",

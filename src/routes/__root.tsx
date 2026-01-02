@@ -22,18 +22,16 @@ export const Route = createRootRoute({
   beforeLoad: ({ location }) => {
     return { href: location.href }
   },
-  loaderDeps: ({ search: { q, completed, sortBy, sortOrder } }) => ({
+  loaderDeps: ({ search: { q, completed, sorts } }) => ({
     q,
     completed,
-    sortBy,
-    sortOrder,
+    sorts,
   }),
   loader: async ({ deps }) => {
     return {
       q: deps.q,
       completed: deps.completed,
-      sortBy: deps.sortBy,
-      sortOrder: deps.sortOrder,
+      sorts: deps.sorts,
     }
   },
   head: () => ({
@@ -91,8 +89,8 @@ function Footer() {
                 : "未完了"}
           </p>
           <p>
-            <span className="font-medium">ソート:</span> {searchParams.sortBy} (
-            {searchParams.sortOrder})
+            <span className="font-medium">ソート:</span>{" "}
+            {searchParams.sorts?.map((s) => `${s.field} ${s.order}`).join(", ") || "(なし)"}
           </p>
         </div>
       </div>

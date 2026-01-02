@@ -8,13 +8,12 @@ export const Route = createFileRoute("/_authenticated/")({
   search: {
     middlewares: [],
   },
-  loaderDeps: ({ search: { q, completed, priority, urgency, sortBy, sortOrder } }) => ({
+  loaderDeps: ({ search: { q, completed, priority, urgency, sorts } }) => ({
     q,
     completed,
     priority,
     urgency,
-    sortBy,
-    sortOrder,
+    sorts,
   }),
   loader: ({ deps }): SearchParams => {
     return {
@@ -22,8 +21,7 @@ export const Route = createFileRoute("/_authenticated/")({
       completed: deps.completed,
       priority: deps.priority,
       urgency: deps.urgency,
-      sortBy: deps.sortBy,
-      sortOrder: deps.sortOrder,
+      sorts: deps.sorts,
     }
   },
   component: TodoList,

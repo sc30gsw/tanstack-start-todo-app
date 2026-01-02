@@ -46,6 +46,7 @@ export function TodoFormModal() {
       </div>
       <div className="overflow-y-auto">
         <TodoForm
+          isEdit={false}
           onSuccess={() => {
             if (modalRef.current) {
               modalRef.current.hidePopover()

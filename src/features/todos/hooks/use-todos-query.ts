@@ -11,8 +11,7 @@ export function useTodosQuery() {
   const completed = search.completed
   const priority = search.priority
   const urgency = search.urgency
-  const sortBy = search.sortBy
-  const sortOrder = search.sortOrder
+  const sorts = search.sorts ?? [{ field: "createdAt" as const, order: "desc" as const }]
 
   return useLiveSuspenseQuery(
     (q) => {
@@ -36,26 +35,24 @@ export function useTodosQuery() {
         })
       }
 
-      switch (sortBy) {
-        case "createdAt":
-          query = query.orderBy(({ todo }) => todo.created_at, sortOrder)
-          break
+      for (const sort of sorts) {
+        switch (sort.field) {
+          case "createdAt":
+            query = query.orderBy(({ todo }) => todo.created_at, sort.order)
+            break
 
-        case "text":
-          query = query.orderBy(({ todo }) => todo.text, sortOrder)
-          break
+          case "priority":
+            query = query.orderBy(({ todo }) => todo.priority, sort.order)
+            break
 
-        case "priority":
-          query = query.orderBy(({ todo }) => todo.priority, sortOrder)
-          break
-
-        case "urgency":
-          query = query.orderBy(({ todo }) => todo.urgency, sortOrder)
-          break
+          case "urgency":
+            query = query.orderBy(({ todo }) => todo.urgency, sort.order)
+            break
+        }
       }
 
       return query
     },
-    [completed, priority, urgency, searchQuery, sortBy, sortOrder],
+    [completed, priority, urgency, searchQuery, sorts],
   )
 }
